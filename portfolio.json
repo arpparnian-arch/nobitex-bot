@@ -7,15 +7,15 @@
             "buy_price": 5.084,
             "amount": 3.933910306845004,
             "invested": 20.0,
-            "highest_price": 5.084,
-            "breakeven_active": false,
+            "highest_price": 5.162,
+            "breakeven_active": true,
             "buy_time": 1793425809
         },
         "HYPEUSDT": {
             "buy_price": 88.395,
             "amount": 0.22625714124102042,
             "invested": 20.0,
-            "highest_price": 88.395,
+            "highest_price": 88.8,
             "breakeven_active": false,
             "buy_time": 1793428375
         }
