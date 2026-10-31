@@ -2,7 +2,7 @@ name: Nobitex Trading Bot
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/50 * * * *'  # استارت خودکار هر ۵۰ دقیقه برای پوشش ۲۴ ساعته دائمی
   workflow_dispatch:
 
 concurrency:
@@ -15,11 +15,12 @@ permissions:
 jobs:
   trade:
     runs-on: ubuntu-latest
+    timeout-minutes: 58     # مجوز اجرای مداوم ۵۰ دقیقه‌ای در سرور گیت‌هاب
     steps:
       - name: دریافت کدهای پروژه
         uses: actions/checkout@v4
 
-      - name: تنظیم DNS جهانی برای باز کردن سریع دامنه‌های ایران
+      - name: تنظیم DNS جهانی برای باز کردن سریع نوبیتکس
         run: |
           sudo systemd-resolve --set-dns=1.1.1.1 --set-dns=8.8.8.8 --interface=eth0 || true
           echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf > /dev/null
@@ -33,13 +34,14 @@ jobs:
       - name: نصب کتابخانه‌های تحلیل بازار
         run: pip install requests pandas urllib3
 
-      - name: اجرای ربات معامله‌گر هوشمند
+      - name: اجرای موتور دائمی ۵۰ دقیقه‌ای ربات
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python bot.py
 
       - name: ذخیره ایمن وضعیت کیف پول در حافظه گیت‌هاب
+        if: always()
         run: |
           git config --global user.name "TradingBot"
           git config --global user.email "bot@users.noreply.github.com"
