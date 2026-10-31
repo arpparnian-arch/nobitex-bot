@@ -19,6 +19,12 @@ jobs:
       - name: دریافت کدهای پروژه
         uses: actions/checkout@v4
 
+      - name: تنظیم DNS جهانی برای باز کردن سریع دامنه‌های ایران
+        run: |
+          sudo systemd-resolve --set-dns=1.1.1.1 --set-dns=8.8.8.8 --interface=eth0 || true
+          echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf > /dev/null
+          echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolv.conf > /dev/null
+
       - name: نصب پایتون
         uses: actions/setup-python@v5
         with:
