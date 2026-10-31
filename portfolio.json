@@ -1,16 +1,10 @@
 {
-    "balance": 79.75721085759244,
-    "total_trades": 1,
+    "balance": 99.55055154428287,
+    "total_trades": 2,
     "win_trades": 0,
-    "positions": {
-        "HYPEUSDT": {
-            "buy_price": 88.395,
-            "amount": 0.22625714124102042,
-            "invested": 20.0,
-            "highest_price": 88.8,
-            "breakeven_active": false,
-            "buy_time": 1793428375
-        }
+    "positions": {},
+    "cooldowns": {
+        "HYPEUSDT": 1793451707
     },
-    "cooldowns": {}
+    "total_net_profit": -0.20665931330957618
 }
