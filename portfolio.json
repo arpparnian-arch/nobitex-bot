@@ -1,10 +1,8 @@
 {
-    "balance": 99.55055154428287,
-    "total_trades": 2,
+    "balance": 99.54183601679865,
+    "total_trades": 3,
     "win_trades": 0,
     "positions": {},
-    "cooldowns": {
-        "HYPEUSDT": 1793451707
-    },
-    "total_net_profit": -0.20665931330957618
+    "cooldowns": {},
+    "total_net_profit": -0.21537484079378724
 }
