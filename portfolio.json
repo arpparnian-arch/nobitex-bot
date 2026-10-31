@@ -1,8 +1,16 @@
 {
-    "balance": 99.28882453125026,
+    "balance": 79.28882453125026,
     "total_trades": 4,
     "win_trades": 0,
-    "positions": {},
+    "positions": {
+        "BREVUSDT": {
+            "buy_price": 0.0847,
+            "invested": 20.0,
+            "highest_price": 0.0847,
+            "zero_loss_active": false,
+            "buy_time": 1793467365
+        }
+    },
     "cooldowns": {
         "TRXUSDT": 1793469985
     },
