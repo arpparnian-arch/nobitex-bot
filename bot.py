@@ -8,7 +8,6 @@ from zoneinfo import ZoneInfo
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-# خواندن اطلاعات امنیتی از گاوصندوق گیت‌هاب
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
@@ -18,9 +17,9 @@ TRADE_AMOUNT = 20.0             # مبلغ ورود در هر پله خرید (�
 MAX_BUYS_PER_RUN = 2            # حداکثر خرید در هر چرخه ۱۵ دقیقه‌ای
 MAX_OPEN_POSITIONS = 5          # حداکثر تعداد معاملات باز همزمان
 FEE_PERCENT = 0.35              # مجموع کارمزد رفت و برگشت صرافی (درصد)
-MAX_SPREAD_PERCENT = 0.75       # حداکثر شکاف مجاز بین قیمت خرید و فروش در تابلو (درصد)
+MAX_SPREAD_PERCENT = 0.85       # حداکثر شکاف مجاز بین قیمت خرید و فروش در تابلو (درصد)
 
-RSI_BUY_LIMIT = 32.0            # سقف RSI برای شکار کف قیمتی
+RSI_BUY_LIMIT = 32.0            # سقف RSI برای شکار کف قیمتی (برای تست خرید فوری موقتاً 65.0 بگذارید)
 BREAKEVEN_TRIGGER = 1.5         # فعال‌سازی سپر بدون ریسک در ۱.۵٪ سود ناخالص
 BREAKEVEN_FLOOR = 0.55          # خروج با سود خالص در صورت برگشت قیمت پس از ریسک‌فری
 TRAILING_START = 2.4            # شروع تعقیب سود از ۲.۴٪ به بالا
@@ -28,7 +27,12 @@ STOP_LOSS_LIMIT = -2.0          # حد ضرر قطعی برای محافظت ا�
 COOLDOWN_SECONDS = 4 * 3600     # ۴ ساعت جریمه و ممنوعیت خرید برای ارز حد ضرر خورده
 STAGNANT_HOURS = 12             # آزادسازی سرمایه راکد پس از ۱۲ ساعت در صورت درجا زدن
 
-# لیست سیاه استیبل‌کوین‌ها و توکن‌های ثابت
+# لیست آدرس‌های سرور نوبیتکس (اصلی و پشتیبان)
+NOBITEX_HOSTS = [
+    "https://apiv2.nobitex.ir",
+    "https://api.nobitex.ir"
+]
+
 BLACKLIST_SYMBOLS = {
     "DAIUSDT", "USDCUSDT", "BUSDUSDT", "TUSDUSDT", 
     "USDPUSDT", "USDTUSDT", "FDUSDUSDT", "PYUSDUSDT", "PAXGUSDT", "XAUTUSDT"
@@ -37,10 +41,9 @@ BLACKLIST_SYMBOLS = {
 PORTFOLIO_FILE = "portfolio.json"
 
 def create_resilient_session():
-    """ساخت نشست پایدار با سیستم تلاش مجدد خودکار در برابر خطاهای لحظه‌ای شبکه"""
     session = requests.Session()
     retry = Retry(
-        total=4,
+        total=3,
         backoff_factor=0.5,
         status_forcelist=[429, 500, 502, 503, 504],
         allowed_methods=["GET", "POST"]
@@ -48,13 +51,31 @@ def create_resilient_session():
     adapter = HTTPAdapter(max_retries=retry)
     session.mount("https://", adapter)
     session.mount("http://", adapter)
-    session.headers.update({"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Accept": "application/json"
+    })
     return session
 
 SESSION = create_resilient_session()
 
+def request_nobitex(endpoint, timeout=12):
+    """اتصال هوشمند به سرورهای نوبیتکس با سوییچ خودکار روی سرور پشتیبان"""
+    last_err = None
+    for base_url in NOBITEX_HOSTS:
+        url = f"{base_url}{endpoint}"
+        try:
+            res = SESSION.get(url, timeout=timeout)
+            if res.status_code == 200:
+                return res.json()
+        except Exception as e:
+            last_err = e
+            continue
+    if last_err:
+        print(f"خطا در اتصال به نوبیتکس ({endpoint}): {last_err}")
+    return None
+
 def format_price(price):
-    """نمایش استاندارد و خوانا برای انواع قیمت‌ها"""
     if price >= 10:
         return f"{price:,.2f}"
     elif price >= 0.1:
@@ -63,7 +84,6 @@ def format_price(price):
         return f"{price:.8f}".rstrip("0").rstrip(".")
 
 def is_silent_hours():
-    """ارسال بی‌صدا در ساعات پایانی شب (۲۲:۴۵ تا ۰۷:۴۵ به وقت تهران)"""
     try:
         now = datetime.now(ZoneInfo("Asia/Tehran"))
         current_minutes = now.hour * 60 + now.minute
@@ -116,7 +136,6 @@ def load_portfolio():
     return initial_data
 
 def save_portfolio(data):
-    """ذخیره‌سازی اتمی (Atomic Write) جهت محافظت ۱۰۰ درصدی از فایل حافظه"""
     temp_file = f"{PORTFOLIO_FILE}.tmp"
     try:
         with open(temp_file, "w", encoding="utf-8") as f:
@@ -126,58 +145,50 @@ def save_portfolio(data):
         print(f"خطا در ذخیره فایل حافظه: {e}")
 
 def get_top_usdt_markets(limit=60):
-    """دریافت لیست ۶۰ ارز پرحجم با اعتبارسنجی شکاف تابلو (Spread)"""
-    url = "https://api.nobitex.ir/market/stats"
+    """دریافت لیست ۶۰ ارز پرحجم از سرور جدید نوبیتکس"""
+    res = request_nobitex("/market/stats", timeout=15)
     market_info = {}
-    try:
-        res = SESSION.get(url, timeout=15).json()
-        if res.get("status") == "ok":
-            stats = res.get("stats", {})
-            usdt_pairs = []
-            for pair, data in stats.items():
-                if pair.endswith("-usdt") and not data.get("isClosed", False):
-                    symbol = pair.replace("-", "").upper()
-                    if symbol in BLACKLIST_SYMBOLS:
-                        continue
-                    volume = float(data.get("volumeDst", 0))
-                    best_buy = float(data.get("bestBuy", 0))
-                    best_sell = float(data.get("bestSell", 0))
-                    
-                    spread_pct = ((best_sell - best_buy) / best_buy * 100) if best_buy > 0 else 99.0
-                    market_info[symbol] = {"spread": spread_pct, "volume": volume}
-                    
-                    if volume >= 3000:
-                        usdt_pairs.append((symbol, volume))
-            
-            usdt_pairs.sort(key=lambda x: x[1], reverse=True)
-            top_list = [item[0] for item in usdt_pairs[:limit]]
+    if res and res.get("status") == "ok":
+        stats = res.get("stats", {})
+        usdt_pairs = []
+        for pair, data in stats.items():
+            if pair.endswith("-usdt") and not data.get("isClosed", False):
+                symbol = pair.replace("-", "").upper()
+                if symbol in BLACKLIST_SYMBOLS:
+                    continue
+                volume = float(data.get("volumeDst", 0))
+                best_buy = float(data.get("bestBuy", 0))
+                best_sell = float(data.get("bestSell", 0))
+                
+                spread_pct = ((best_sell - best_buy) / best_buy * 100) if best_buy > 0 else 99.0
+                market_info[symbol] = {"spread": spread_pct, "volume": volume}
+                
+                if volume >= 2000:
+                    usdt_pairs.append((symbol, volume))
+        
+        usdt_pairs.sort(key=lambda x: x[1], reverse=True)
+        top_list = [item[0] for item in usdt_pairs[:limit]]
+        if top_list:
             return top_list, market_info
-    except Exception as e:
-        print(f"خطا در دریافت لیست بازارها: {e}")
-    
+            
     fallback = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "TONUSDT", "DOGEUSDT", "XRPUSDT", "ADAUSDT", "AVAXUSDT", "SHIBUSDT", "TRXUSDT"]
     return fallback, market_info
 
 def get_nobitex_candles(symbol):
-    """دریافت کندل‌های ۱۵ دقیقه‌ای استاندارد برای تحلیل دقیق تکنیکال"""
     to_time = int(time.time())
     from_time = to_time - (120 * 15 * 60)
-    url = f"https://api.nobitex.ir/market/udf/history?symbol={symbol}&resolution=15&from={from_time}&to={to_time}"
-    try:
-        res = SESSION.get(url, timeout=10).json()
-        if res.get("s") == "ok" and len(res.get("c", [])) >= 30:
-            return pd.DataFrame({
-                "close": pd.Series(res["c"], dtype=float),
-                "high": pd.Series(res["h"], dtype=float),
-                "low": pd.Series(res["l"], dtype=float),
-                "volume": pd.Series(res.get("v", [1]*len(res["c"])), dtype=float)
-            })
-    except Exception:
-        pass
+    endpoint = f"/market/udf/history?symbol={symbol}&resolution=15&from={from_time}&to={to_time}"
+    res = request_nobitex(endpoint, timeout=10)
+    if res and res.get("s") == "ok" and len(res.get("c", [])) >= 30:
+        return pd.DataFrame({
+            "close": pd.Series(res["c"], dtype=float),
+            "high": pd.Series(res["h"], dtype=float),
+            "low": pd.Series(res["l"], dtype=float),
+            "volume": pd.Series(res.get("v", [1]*len(res["c"])), dtype=float)
+        })
     return None
 
 def calculate_indicators(df, period=14):
-    """محاسبه دقیق RSI استاندارد Wilder و سنجش نوسان ATR"""
     closes = df["close"]
     delta = closes.diff()
     gain = delta.clip(lower=0)
@@ -196,7 +207,6 @@ def calculate_indicators(df, period=14):
     return rsi, atr_pct
 
 def is_market_safe_for_buying():
-    """سپر محافظ بیت‌کوین در برابر آبشارهای نزولی کل بازار"""
     btc_df = get_nobitex_candles("BTCUSDT")
     if btc_df is None or len(btc_df) < 5:
         return True
@@ -212,7 +222,6 @@ def is_market_safe_for_buying():
     return True
 
 def calculate_total_equity(portfolio, latest_prices):
-    """محاسبه دارایی کل (نقد + ارزش روز پوزیشن‌های باز)"""
     total = float(portfolio["balance"])
     for sym, pos in portfolio["positions"].items():
         price = latest_prices.get(sym, float(pos["buy_price"]))
@@ -232,9 +241,12 @@ def run_bot():
     top_symbols, market_info = get_top_usdt_markets(MAX_COINS_TO_SCAN)
     all_symbols = list(dict.fromkeys(list(positions.keys()) + top_symbols))
     
-    print(f"شروع اسکن کامل و ایمن {len(all_symbols)} ارز در نوبیتکس...")
+    print(f"اتصال برقرار شد! شروع اسکن کامل و ایمن {len(all_symbols)} ارز در نوبیتکس...")
     buy_candidates = []
     latest_prices = {}
+    scanned_count = 0
+    lowest_rsi_seen = 100.0
+    lowest_rsi_sym = ""
     
     for symbol in all_symbols:
         df = get_nobitex_candles(symbol)
@@ -242,6 +254,7 @@ def run_bot():
             time.sleep(0.12)
             continue
             
+        scanned_count += 1
         closes = df["close"]
         current_price = float(closes.iloc[-1])
         prev_price = float(closes.iloc[-2])
@@ -253,6 +266,10 @@ def run_bot():
         prev_rsi = float(rsi_series.iloc[-2])
         prev2_rsi = float(rsi_series.iloc[-3])
         current_atr_pct = float(atr_pct_series.iloc[-1])
+        
+        if current_rsi < lowest_rsi_seen:
+            lowest_rsi_seen = current_rsi
+            lowest_rsi_sym = symbol
         
         # ==================== ۱. مدیریت هوشمند پوزیشن‌های باز (فروش) ====================
         if symbol in positions:
@@ -271,7 +288,6 @@ def run_bot():
             max_profit_pct = ((highest_price - buy_price) / buy_price) * 100
             drop_from_peak_pct = ((highest_price - current_price) / highest_price) * 100
             
-            # کسر دقیق کارمزد رفت و برگشت صرافی
             gross_value = amount * current_price
             fee_cost = (invested * (FEE_PERCENT / 200.0)) + (gross_value * (FEE_PERCENT / 200.0))
             net_sell_value = gross_value - fee_cost
@@ -287,27 +303,18 @@ def run_bot():
             sell_reason = ""
             is_stop_loss = False
             
-            # الف) قفل سود متحرک داینامیک
             if max_profit_pct >= TRAILING_START and (drop_from_peak_pct >= dynamic_trailing_step or current_rsi >= 75):
                 should_sell = True
                 sell_reason = f"قفل سود متحرک (سقف لمس‌شده: {max_profit_pct:.2f}%)"
-                
-            # ب) خروج در اوج اشباع خرید
             elif current_rsi >= 78 and net_profit_pct >= 1.5:
                 should_sell = True
                 sell_reason = f"خروج در اوج اشباع خرید (RSI: {current_rsi:.1f})"
-                
-            # ج) سپر محافظ ریسک‌فری
             elif pos.get("breakeven_active", False) and gross_profit_pct <= BREAKEVEN_FLOOR:
                 should_sell = True
                 sell_reason = f"سپر محافظ سود (برگشت از سقف {max_profit_pct:.2f}%)"
-                
-            # د) آزادسازی سرمایه از ارز راکد
             elif hours_held >= STAGNANT_HOURS and net_profit_pct >= 0.15 and current_rsi >= 50:
                 should_sell = True
                 sell_reason = f"آزادسازی سرمایه راکد پس از {hours_held:.0f} ساعت (با سود)"
-                
-            # هـ) حد ضرر قطعی
             elif gross_profit_pct <= STOP_LOSS_LIMIT:
                 should_sell = True
                 is_stop_loss = True
@@ -348,11 +355,11 @@ def run_bot():
                 continue
                 
             was_oversold = (current_rsi <= RSI_BUY_LIMIT or prev_rsi <= RSI_BUY_LIMIT or prev2_rsi <= RSI_BUY_LIMIT)
-            is_rebounding = (current_price > prev_price and current_rsi > prev_rsi and 25.0 <= current_rsi <= 42.0)
-            has_good_volatility = (current_atr_pct >= 0.45)
+            is_rebounding = (current_price > prev_price and current_rsi > prev_rsi and 25.0 <= current_rsi <= RSI_BUY_LIMIT + 10.0)
+            has_good_volatility = (current_atr_pct >= 0.40)
             
             if was_oversold and is_rebounding and has_good_volatility:
-                score = (45.0 - current_rsi) + (current_atr_pct * 2.0)
+                score = (50.0 - current_rsi) + (current_atr_pct * 2.0)
                 buy_candidates.append({
                     "symbol": symbol,
                     "price": current_price,
@@ -361,6 +368,8 @@ def run_bot():
                 })
                 
         time.sleep(0.12)
+
+    print(f"اسکن تمام شد: {scanned_count} ارز بررسی شدند. کمترین RSI فعلی بازار: {lowest_rsi_sym} با عدد {lowest_rsi_seen:.1f}")
 
     # ==================== ۳. ثبت خریدهای پرامتیاز ====================
     buy_candidates.sort(key=lambda x: x["score"], reverse=True)
