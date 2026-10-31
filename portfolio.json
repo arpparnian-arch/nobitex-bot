@@ -6,13 +6,11 @@
         "TRXUSDT": {
             "buy_price": 0.30791,
             "invested": 20.0,
-            "highest_price": 0.30791,
+            "highest_price": 0.30899,
             "zero_loss_active": false,
             "buy_time": 1793480631
         }
     },
-    "cooldowns": {
-        "BREVUSDT": 1793483725
-    },
+    "cooldowns": {},
     "total_net_profit": -0.848511203741309
 }
