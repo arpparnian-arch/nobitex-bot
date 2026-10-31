@@ -1,16 +1,8 @@
 {
-    "balance": 60.0,
-    "total_trades": 0,
+    "balance": 79.75721085759244,
+    "total_trades": 1,
     "win_trades": 0,
     "positions": {
-        "PROMUSDT": {
-            "buy_price": 5.084,
-            "amount": 3.933910306845004,
-            "invested": 20.0,
-            "highest_price": 5.162,
-            "breakeven_active": true,
-            "buy_time": 1793425809
-        },
         "HYPEUSDT": {
             "buy_price": 88.395,
             "amount": 0.22625714124102042,
