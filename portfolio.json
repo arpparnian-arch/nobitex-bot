@@ -1,7 +1,16 @@
 {
-    "balance": 100.0,
+    "balance": 80.0,
     "total_trades": 0,
     "win_trades": 0,
-    "positions": {},
+    "positions": {
+        "PROMUSDT": {
+            "buy_price": 5.084,
+            "amount": 3.933910306845004,
+            "invested": 20.0,
+            "highest_price": 5.084,
+            "breakeven_active": false,
+            "buy_time": 1793425809
+        }
+    },
     "cooldowns": {}
 }
