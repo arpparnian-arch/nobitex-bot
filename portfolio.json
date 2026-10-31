@@ -1,16 +1,10 @@
 {
-    "balance": 79.19121441182044,
-    "total_trades": 5,
+    "balance": 98.90869965385113,
+    "total_trades": 6,
     "win_trades": 0,
-    "positions": {
-        "BREVUSDT": {
-            "buy_price": 0.0847,
-            "invested": 20.0,
-            "highest_price": 0.085,
-            "zero_loss_active": false,
-            "buy_time": 1793467365
-        }
+    "positions": {},
+    "cooldowns": {
+        "BREVUSDT": 1793483725
     },
-    "cooldowns": {},
-    "total_net_profit": -0.5659964457720059
+    "total_net_profit": -0.848511203741309
 }
