@@ -1,5 +1,5 @@
 {
-    "balance": 80.0,
+    "balance": 60.0,
     "total_trades": 0,
     "win_trades": 0,
     "positions": {
@@ -10,6 +10,14 @@
             "highest_price": 5.084,
             "breakeven_active": false,
             "buy_time": 1793425809
+        },
+        "HYPEUSDT": {
+            "buy_price": 88.395,
+            "amount": 0.22625714124102042,
+            "invested": 20.0,
+            "highest_price": 88.395,
+            "breakeven_active": false,
+            "buy_time": 1793428375
         }
     },
     "cooldowns": {}
