@@ -11,7 +11,8 @@ from urllib3.util.retry import Retry
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
-# ==================== تنظیمات استراتژی بهینه (۲۵ مرحله تست‌شده) ====================
+# ==================== تنظیمات استراتژی و گزارش‌دهی ====================
+SEND_REPORT_EVERY_RUN = True    # ارسال گزارش وضعیت در هر بار اجرای ربات (هر ۱۵ دقیقه)
 MAX_COINS_TO_SCAN = 60          # بررسی ۶۰ ارز برتر بازار نوبیتکس
 TRADE_AMOUNT = 20.0             # مبلغ ورود در هر پله خرید (۲۰ تتر)
 MAX_BUYS_PER_RUN = 2            # حداکثر خرید در هر چرخه ۱۵ دقیقه‌ای
@@ -19,7 +20,7 @@ MAX_OPEN_POSITIONS = 5          # حداکثر تعداد معاملات باز 
 FEE_PERCENT = 0.35              # مجموع کارمزد رفت و برگشت صرافی (درصد)
 MAX_SPREAD_PERCENT = 0.85       # حداکثر شکاف مجاز بین قیمت خرید و فروش در تابلو (درصد)
 
-RSI_BUY_LIMIT = 32.0            # سقف RSI برای شکار کف قیمتی (برای تست خرید فوری موقتاً 65.0 بگذارید)
+RSI_BUY_LIMIT = 32.0            # سقف RSI برای شکار کف قیمتی
 BREAKEVEN_TRIGGER = 1.5         # فعال‌سازی سپر بدون ریسک در ۱.۵٪ سود ناخالص
 BREAKEVEN_FLOOR = 0.55          # خروج با سود خالص در صورت برگشت قیمت پس از ریسک‌فری
 TRAILING_START = 2.4            # شروع تعقیب سود از ۲.۴٪ به بالا
@@ -27,7 +28,6 @@ STOP_LOSS_LIMIT = -2.0          # حد ضرر قطعی برای محافظت ا�
 COOLDOWN_SECONDS = 4 * 3600     # ۴ ساعت جریمه و ممنوعیت خرید برای ارز حد ضرر خورده
 STAGNANT_HOURS = 12             # آزادسازی سرمایه راکد پس از ۱۲ ساعت در صورت درجا زدن
 
-# لیست آدرس‌های سرور نوبیتکس (اصلی و پشتیبان)
 NOBITEX_HOSTS = [
     "https://apiv2.nobitex.ir",
     "https://api.nobitex.ir"
@@ -60,7 +60,6 @@ def create_resilient_session():
 SESSION = create_resilient_session()
 
 def request_nobitex(endpoint, timeout=12):
-    """اتصال هوشمند به سرورهای نوبیتکس با سوییچ خودکار روی سرور پشتیبان"""
     last_err = None
     for base_url in NOBITEX_HOSTS:
         url = f"{base_url}{endpoint}"
@@ -83,7 +82,15 @@ def format_price(price):
     else:
         return f"{price:.8f}".rstrip("0").rstrip(".")
 
+def get_tehran_time_str():
+    try:
+        now = datetime.now(ZoneInfo("Asia/Tehran"))
+        return now.strftime("%H:%M")
+    except Exception:
+        return ""
+
 def is_silent_hours():
+    """ارسال بی‌صدا بین ساعت ۲۲:۴۵ تا ۰۷:۴۵ صبح به وقت تهران"""
     try:
         now = datetime.now(ZoneInfo("Asia/Tehran"))
         current_minutes = now.hour * 60 + now.minute
@@ -127,11 +134,11 @@ def load_portfolio():
         "cooldowns": {}
     }
     send_telegram(
-        "⭕️ ربات هوشمند نوبیتکس (نسخه نهایی تست‌شده در ۲۵ مرحله) فعال شد!\n\n"
+        "⭕️ ربات هوشمند نوبیتکس (مجهز به گزارش زنده) فعال شد!\n\n"
         "✅ موجودی اولیه مجازی: ۱۰۰ تتر\n"
-        "✅ اسکن هوشمند: بررسی ۶۰ ارز با فیلتر نقدینگی و شکاف قیمت (Spread)\n"
-        "✅ مدیریت سرمایه: سپر بیت‌کوین + ریسک‌فری داینامیک + ضد ارز راکد\n\n"
-        "🛑 ربات به صورت ۲۴ ساعته بازار را رصد می‌کند."
+        "✅ اسکن هوشمند: بررسی ۶۰ ارز پرحجم بازار\n"
+        "✅ گزارش‌دهی: ارسال وضعیت لحظه‌ای اسکن بازار در هر نوبت اجرا\n\n"
+        "🛑 ربات در حال بررسی اولین چرخه بازار است..."
     )
     return initial_data
 
@@ -145,7 +152,6 @@ def save_portfolio(data):
         print(f"خطا در ذخیره فایل حافظه: {e}")
 
 def get_top_usdt_markets(limit=60):
-    """دریافت لیست ۶۰ ارز پرحجم از سرور جدید نوبیتکس"""
     res = request_nobitex("/market/stats", timeout=15)
     market_info = {}
     if res and res.get("status") == "ok":
@@ -206,10 +212,10 @@ def calculate_indicators(df, period=14):
     
     return rsi, atr_pct
 
-def is_market_safe_for_buying():
+def check_market_safety():
     btc_df = get_nobitex_candles("BTCUSDT")
     if btc_df is None or len(btc_df) < 5:
-        return True
+        return True, 0.0, 0.0
     closes = btc_df["close"]
     current_btc = float(closes.iloc[-1])
     prev_btc = float(closes.iloc[-2])
@@ -217,9 +223,8 @@ def is_market_safe_for_buying():
     
     drop_45m = ((current_btc - btc_45m_ago) / btc_45m_ago) * 100
     if drop_45m <= -1.4 and current_btc < prev_btc:
-        print("هشدار: بیت‌کوین در حال ریزش شدید است. خریدهای جدید موقتاً متوقف شدند.")
-        return False
-    return True
+        return False, current_btc, drop_45m
+    return True, current_btc, drop_45m
 
 def calculate_total_equity(portfolio, latest_prices):
     total = float(portfolio["balance"])
@@ -237,16 +242,14 @@ def run_bot():
     cooldowns = {k: v for k, v in cooldowns.items() if now_ts < v}
     portfolio["cooldowns"] = cooldowns
     
-    market_safe = is_market_safe_for_buying()
+    market_safe, btc_price, btc_change = check_market_safety()
     top_symbols, market_info = get_top_usdt_markets(MAX_COINS_TO_SCAN)
     all_symbols = list(dict.fromkeys(list(positions.keys()) + top_symbols))
     
-    print(f"اتصال برقرار شد! شروع اسکن کامل و ایمن {len(all_symbols)} ارز در نوبیتکس...")
+    print(f"شروع اسکن کامل {len(all_symbols)} ارز در نوبیتکس...")
     buy_candidates = []
     latest_prices = {}
-    scanned_count = 0
-    lowest_rsi_seen = 100.0
-    lowest_rsi_sym = ""
+    scanned_coins_summary = []
     
     for symbol in all_symbols:
         df = get_nobitex_candles(symbol)
@@ -254,7 +257,6 @@ def run_bot():
             time.sleep(0.12)
             continue
             
-        scanned_count += 1
         closes = df["close"]
         current_price = float(closes.iloc[-1])
         prev_price = float(closes.iloc[-2])
@@ -267,9 +269,11 @@ def run_bot():
         prev2_rsi = float(rsi_series.iloc[-3])
         current_atr_pct = float(atr_pct_series.iloc[-1])
         
-        if current_rsi < lowest_rsi_seen:
-            lowest_rsi_seen = current_rsi
-            lowest_rsi_sym = symbol
+        scanned_coins_summary.append({
+            "symbol": symbol,
+            "price": current_price,
+            "rsi": current_rsi
+        })
         
         # ==================== ۱. مدیریت هوشمند پوزیشن‌های باز (فروش) ====================
         if symbol in positions:
@@ -341,7 +345,7 @@ def run_bot():
                     f"✅ سود/زیان خالص (کسر کارمزد): {net_profit_pct:+.2f}% ({net_profit_usdt:+.2f} تتر)\n"
                     f"✅ آمار کلی: {total_t} معامله (نرخ برد: {win_rate:.0f}%)\n"
                     f"✅ موجودی نقد: {portfolio['balance']:.2f} تتر\n"
-                    f"🛑 ارزش کل دارایی (نقد + پوزیشن‌ها): {total_equity:.2f} تتر"
+                    f"🛑 ارزش کل دارایی: {total_equity:.2f} تتر"
                 )
                 send_telegram(msg)
                 
@@ -368,8 +372,6 @@ def run_bot():
                 })
                 
         time.sleep(0.12)
-
-    print(f"اسکن تمام شد: {scanned_count} ارز بررسی شدند. کمترین RSI فعلی بازار: {lowest_rsi_sym} با عدد {lowest_rsi_seen:.1f}")
 
     # ==================== ۳. ثبت خریدهای پرامتیاز ====================
     buy_candidates.sort(key=lambda x: x["score"], reverse=True)
@@ -403,11 +405,41 @@ def run_bot():
                 f"✅ شاخص RSI: {rsi_val:.1f} (تأیید چرخش از کف + نقدینگی فعال)\n"
                 f"✅ مبلغ سرمایه‌گذاری: {TRADE_AMOUNT} تتر\n"
                 f"✅ موجودی نقد باقی‌مانده: {portfolio['balance']:.2f} تتر\n"
-                f"🛑 ارزش کل دارایی (نقد + پوزیشن‌ها): {total_equity:.2f} تتر"
+                f"🛑 ارزش کل دارایی: {total_equity:.2f} تتر"
             )
             send_telegram(msg)
         else:
             break
+
+    # ==================== ۴. ارسال گزارش زنده (نبض بازار) در هر اجرا ====================
+    if SEND_REPORT_EVERY_RUN and scanned_coins_summary:
+        scanned_coins_summary.sort(key=lambda x: x["rsi"])
+        top_oversold = scanned_coins_summary[:3]
+        oversold_text = " | ".join([f"{c['symbol'].replace('USDT','')}: {c['rsi']:.1f}" for c in top_oversold])
+        
+        open_pos_lines = []
+        for sym, pos in portfolio["positions"].items():
+            cur_p = latest_prices.get(sym, float(pos["buy_price"]))
+            buy_p = float(pos["buy_price"])
+            pnl_pct = ((cur_p - buy_p) / buy_p) * 100 - FEE_PERCENT
+            open_pos_lines.append(f"{sym.replace('USDT','')} ({pnl_pct:+.2f}%)")
+            
+        open_pos_text = " ، ".join(open_pos_lines) if open_pos_lines else "ندارد (در انتظار شکار کف قیمت)"
+        safety_text = f"امن (BTC: {format_price(btc_price)}$)" if market_safe else f"هشدار ریزش بیت‌کوین ({btc_change:+.1f}%)"
+        total_equity = calculate_total_equity(portfolio, latest_prices)
+        profit_total = total_equity - 100.0
+        
+        status_msg = (
+            f"⭕️ گزارش زنده اسکن بازار ({get_tehran_time_str()})\n\n"
+            f"✅ تعداد ارزهای بررسی‌شده: {len(scanned_coins_summary)} ارز\n"
+            f"✅ وضعیت کلی بازار: {safety_text}\n"
+            f"✅ نزدیک‌ترین ارزها به کف خرید (RSI زیر {RSI_BUY_LIMIT:.0f}):\n"
+            f"   🔹 {oversold_text}\n"
+            f"✅ معاملات باز فعلی: {open_pos_text}\n"
+            f"✅ موجودی نقد: {portfolio['balance']:.2f} تتر\n\n"
+            f"🛑 ارزش کل سبد: {total_equity:.2f} تتر (سود/زیان کل: {profit_total:+.2f} تتر)"
+        )
+        send_telegram(status_msg)
 
     save_portfolio(portfolio)
 
