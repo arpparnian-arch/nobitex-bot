@@ -1,8 +1,16 @@
 {
-    "balance": 98.69125397167127,
+    "balance": 78.69125397167127,
     "total_trades": 7,
     "win_trades": 0,
-    "positions": {},
+    "positions": {
+        "DOODUSDT": {
+            "buy_price": 0.001853,
+            "invested": 20.0,
+            "highest_price": 0.001853,
+            "zero_loss_active": false,
+            "buy_time": 1793503558
+        }
+    },
     "cooldowns": {},
     "total_net_profit": -1.0659568859211663
 }
