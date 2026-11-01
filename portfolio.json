@@ -3,8 +3,6 @@
     "total_trades": 7,
     "win_trades": 0,
     "positions": {},
-    "cooldowns": {
-        "TRXUSDT": 1793492494
-    },
+    "cooldowns": {},
     "total_net_profit": -1.0659568859211663
 }
