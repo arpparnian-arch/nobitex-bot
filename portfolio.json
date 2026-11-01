@@ -6,8 +6,8 @@
         "DOODUSDT": {
             "buy_price": 0.001853,
             "invested": 20.0,
-            "highest_price": 0.001853,
-            "zero_loss_active": false,
+            "highest_price": 0.001882,
+            "zero_loss_active": true,
             "buy_time": 1793503558
         }
     },
