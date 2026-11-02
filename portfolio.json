@@ -1,8 +1,16 @@
 {
-    "balance": 98.9234665998418,
+    "balance": 78.9234665998418,
     "total_trades": 8,
     "win_trades": 1,
-    "positions": {},
+    "positions": {
+        "CVCUSDT": {
+            "buy_price": 0.02322,
+            "invested": 20.0,
+            "highest_price": 0.02322,
+            "zero_loss_active": false,
+            "buy_time": 1793590015
+        }
+    },
     "cooldowns": {},
     "total_net_profit": -0.8337442577506318
 }
