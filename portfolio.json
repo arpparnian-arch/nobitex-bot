@@ -1,8 +1,16 @@
 {
-    "balance": 98.663974782443,
+    "balance": 78.663974782443,
     "total_trades": 9,
     "win_trades": 1,
-    "positions": {},
+    "positions": {
+        "NEARUSDT": {
+            "buy_price": 4.163,
+            "invested": 20.0,
+            "highest_price": 4.163,
+            "zero_loss_active": false,
+            "buy_time": 1793601151
+        }
+    },
     "cooldowns": {
         "CVCUSDT": 1793603788
     },
