@@ -3,8 +3,6 @@
     "total_trades": 10,
     "win_trades": 1,
     "positions": {},
-    "cooldowns": {
-        "NEARUSDT": 1793609709
-    },
+    "cooldowns": {},
     "total_net_profit": -1.4418812829322754
 }
