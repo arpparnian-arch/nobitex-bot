@@ -1,24 +1,11 @@
 {
-    "balance": 73.27385396503757,
-    "total_trades": 14,
+    "balance": 98.25117492156281,
+    "total_trades": 15,
     "win_trades": 3,
-    "positions": {
-        "KITEUSDT": {
-            "buy_price": 0.11996,
-            "invested": 25.0,
-            "stop_loss": 0.11891674191147034,
-            "take_profit": 0.12455,
-            "breakeven_trigger_price": 0.12063811775754427,
-            "sl_distance_pct": 0.869671630985046,
-            "risk_usdt": 0.32,
-            "highest_price": 0.11999,
-            "breakeven_active": false,
-            "score": 78.0,
-            "expectancy_r": 0.4253071551439358,
-            "buy_time": 1794426623
-        }
+    "positions": {},
+    "cooldowns": {
+        "KITEUSDT": 1794449135
     },
-    "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
     "day_key": "2026-11-12",
@@ -26,14 +13,16 @@
     "week_key": "2026-W45",
     "week_start_equity": 100.0,
     "gross_profit": 0.016388469823925195,
-    "gross_loss": 0.0,
-    "total_fees_paid": 0.14505064456721847,
-    "max_drawdown_pct": 1.8501605810471062,
+    "gross_loss": 0.022679043474772093,
+    "total_fees_paid": 0.3865526290223193,
+    "max_drawdown_pct": 1.901204387746688,
     "trade_returns_pct": [
-        0.066
+        0.066,
+        -0.091
     ],
     "trade_r_multiples": [
-        0.086
+        0.086,
+        -0.104
     ],
     "system_halted": false,
     "halt_reason": ""
