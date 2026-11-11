@@ -4,5 +4,18 @@
     "win_trades": 2,
     "positions": {},
     "cooldowns": {},
-    "total_net_profit": -1.4997453623787609
+    "total_net_profit": -1.4997453623787609,
+    "peak_equity": 100.0,
+    "day_key": "2026-11-11",
+    "day_start_equity": 100.0,
+    "week_key": "2026-W45",
+    "week_start_equity": 100.0,
+    "gross_profit": 0.0,
+    "gross_loss": 0.0,
+    "total_fees_paid": 0.0,
+    "max_drawdown_pct": 1.7425345047863485,
+    "trade_returns_pct": [],
+    "trade_r_multiples": [],
+    "system_halted": false,
+    "halt_reason": ""
 }
