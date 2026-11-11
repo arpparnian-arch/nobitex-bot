@@ -1,8 +1,10 @@
 {
-    "balance": 98.31532957466015,
-    "total_trades": 10,
+    "balance": 98.05430722141014,
+    "total_trades": 11,
     "win_trades": 1,
     "positions": {},
-    "cooldowns": {},
-    "total_net_profit": -1.4418812829322754
+    "cooldowns": {
+        "ZECUSDT": 1794386983
+    },
+    "total_net_profit": -1.7029036361822811
 }
