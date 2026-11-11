@@ -2,7 +2,7 @@ name: Nobitex Trading Bot
 
 on:
   schedule:
-    - cron: '*/50 * * * *'  # استارت خودکار هر ۵۰ دقیقه برای پوشش ۲۴ ساعته دائمی
+    - cron: '*/50 * * * *'
   workflow_dispatch:
 
 concurrency:
@@ -15,7 +15,7 @@ permissions:
 jobs:
   trade:
     runs-on: ubuntu-latest
-    timeout-minutes: 58     # مجوز اجرای مداوم ۵۰ دقیقه‌ای در سرور گیت‌هاب
+    timeout-minutes: 58
     steps:
       - name: دریافت کدهای پروژه
         uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
           python-version: '3.10'
 
       - name: نصب کتابخانه‌های تحلیل بازار
-        run: pip install requests pandas urllib3
+        run: pip install requests pandas numpy urllib3
 
       - name: اجرای موتور دائمی ۵۰ دقیقه‌ای ربات
         env:
