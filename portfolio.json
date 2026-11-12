@@ -3,9 +3,7 @@
     "total_trades": 18,
     "win_trades": 3,
     "positions": {},
-    "cooldowns": {
-        "POLUSDT": 1794470985
-    },
+    "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
     "day_key": "2026-11-12",
