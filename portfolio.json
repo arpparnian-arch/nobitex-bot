@@ -1,8 +1,23 @@
 {
-    "balance": 97.28834795876648,
+    "balance": 72.28834795876648,
     "total_trades": 18,
     "win_trades": 3,
-    "positions": {},
+    "positions": {
+        "PROMUSDT": {
+            "buy_price": 4.824,
+            "invested": 25.0,
+            "stop_loss": 4.765,
+            "take_profit": 4.99968,
+            "breakeven_trigger_price": 4.86235,
+            "sl_distance_pct": 1.2230514096185772,
+            "risk_usdt": 0.4,
+            "highest_price": 4.824,
+            "breakeven_active": false,
+            "score": 89.0,
+            "expectancy_r": 0.31507549137126145,
+            "buy_time": 1794547619
+        }
+    },
     "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
