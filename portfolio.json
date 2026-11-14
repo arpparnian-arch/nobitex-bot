@@ -1,8 +1,23 @@
 {
-    "balance": 97.27113333055033,
+    "balance": 72.27113333055033,
     "total_trades": 20,
     "win_trades": 4,
-    "positions": {},
+    "positions": {
+        "CELRUSDT": {
+            "buy_price": 0.002072,
+            "invested": 25.0,
+            "stop_loss": 0.002058532,
+            "take_profit": 0.002224235,
+            "breakeven_trigger_price": 0.0020807542,
+            "sl_distance_pct": 0.65,
+            "risk_usdt": 0.32,
+            "highest_price": 0.002072,
+            "breakeven_active": false,
+            "score": 78.0,
+            "expectancy_r": 1.472797146314743,
+            "buy_time": 1794647489
+        }
+    },
     "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
