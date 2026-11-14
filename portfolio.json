@@ -1,9 +1,11 @@
 {
-    "balance": 97.35198879745363,
-    "total_trades": 19,
+    "balance": 97.27113333055033,
+    "total_trades": 20,
     "win_trades": 4,
     "positions": {},
-    "cooldowns": {},
+    "cooldowns": {
+        "CELRUSDT": 1794635590
+    },
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
     "day_key": "2026-11-14",
@@ -11,16 +13,17 @@
     "week_key": "2026-W45",
     "week_start_equity": 100.0,
     "gross_profit": 0.0800293085110799,
-    "gross_loss": 0.9855060062710843,
-    "total_fees_paid": 0.9281779483140751,
-    "max_drawdown_pct": 2.7116520412335205,
+    "gross_loss": 1.0663614731743893,
+    "total_fees_paid": 1.1050487776753704,
+    "max_drawdown_pct": 2.7288666694496726,
     "trade_returns_pct": [
         0.066,
         -0.091,
         -3.412,
         -0.121,
         -0.976,
-        0.255
+        0.255,
+        -0.323
     ],
     "trade_r_multiples": [
         0.086,
@@ -28,7 +31,8 @@
         -1.551,
         -0.186,
         -1.501,
-        0.208
+        0.208,
+        -0.406
     ],
     "system_halted": false,
     "halt_reason": ""
