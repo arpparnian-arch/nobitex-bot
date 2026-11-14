@@ -3,9 +3,7 @@
     "total_trades": 20,
     "win_trades": 4,
     "positions": {},
-    "cooldowns": {
-        "CELRUSDT": 1794635590
-    },
+    "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
     "day_key": "2026-11-14",
