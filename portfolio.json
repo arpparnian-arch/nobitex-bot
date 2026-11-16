@@ -1,8 +1,23 @@
 {
-    "balance": 96.51540854963415,
+    "balance": 71.51540854963415,
     "total_trades": 22,
     "win_trades": 4,
-    "positions": {},
+    "positions": {
+        "KITEUSDT": {
+            "buy_price": 0.13084,
+            "invested": 25.0,
+            "stop_loss": 0.12978,
+            "take_profit": 0.14057485,
+            "breakeven_trigger_price": 0.131529,
+            "sl_distance_pct": 0.8101498012840151,
+            "risk_usdt": 0.31,
+            "highest_price": 0.13108,
+            "breakeven_active": false,
+            "score": 84.0,
+            "expectancy_r": 1.7828486026633263,
+            "buy_time": 1794824706
+        }
+    },
     "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
@@ -13,7 +28,7 @@
     "gross_profit": 0.0800293085110799,
     "gross_loss": 1.8220862540905685,
     "total_fees_paid": 1.3749119458429335,
-    "max_drawdown_pct": 3.4845914503658553,
+    "max_drawdown_pct": 3.6393606341017204,
     "trade_returns_pct": [
         0.066,
         -0.091,
