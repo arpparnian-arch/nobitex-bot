@@ -1,25 +1,11 @@
 {
-    "balance": 71.0965974631666,
-    "total_trades": 24,
+    "balance": 95.61756339089514,
+    "total_trades": 25,
     "win_trades": 4,
-    "positions": {
-        "ASTERUSDT": {
-            "buy_price": 0.563,
-            "invested": 25.0,
-            "stop_loss": 0.5590780427706618,
-            "take_profit": 0.58343,
-            "breakeven_trigger_price": 0.5655492721990698,
-            "sl_distance_pct": 0.6966176251044744,
-            "risk_usdt": 0.31,
-            "highest_price": 0.563,
-            "breakeven_active": false,
-            "score": 75.0,
-            "expectancy_r": 0.3975904240873094,
-            "buy_time": 1794970225
-        }
-    },
+    "positions": {},
     "cooldowns": {
-        "HMSTRUSDT": 1794980302
+        "HMSTRUSDT": 1794980302,
+        "ASTERUSDT": 1794984048
     },
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
@@ -28,9 +14,9 @@
     "week_key": "2026-W46",
     "week_start_equity": 96.96612354671402,
     "gross_profit": 0.0800293085110799,
-    "gross_loss": 2.240897340558106,
-    "total_fees_paid": 1.6610114095310895,
-    "max_drawdown_pct": 3.9034025368333976,
+    "gross_loss": 2.7199314128295637,
+    "total_fees_paid": 1.793686689617826,
+    "max_drawdown_pct": 4.382436609104857,
     "trade_returns_pct": [
         0.066,
         -0.091,
@@ -42,7 +28,8 @@
         -1.22,
         -1.803,
         -1.501,
-        -0.174
+        -0.174,
+        -1.916
     ],
     "trade_r_multiples": [
         0.086,
@@ -55,7 +42,8 @@
         -1.877,
         -2.174,
         -1.853,
-        -0.268
+        -0.268,
+        -2.751
     ],
     "system_halted": false,
     "halt_reason": ""
