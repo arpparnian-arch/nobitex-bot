@@ -1,8 +1,23 @@
 {
-    "balance": 95.61756339089514,
+    "balance": 70.61756339089514,
     "total_trades": 25,
     "win_trades": 4,
-    "positions": {},
+    "positions": {
+        "ASTERUSDT": {
+            "buy_price": 0.5493,
+            "invested": 25.0,
+            "stop_loss": 0.54572955,
+            "take_profit": 0.5769345,
+            "breakeven_trigger_price": 0.5516207925,
+            "sl_distance_pct": 0.65,
+            "risk_usdt": 0.29,
+            "highest_price": 0.5496,
+            "breakeven_active": false,
+            "score": 82.0,
+            "expectancy_r": 0.9537289434452837,
+            "buy_time": 1794999324
+        }
+    },
     "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
@@ -13,7 +28,7 @@
     "gross_profit": 0.0800293085110799,
     "gross_loss": 2.7199314128295637,
     "total_fees_paid": 1.793686689617826,
-    "max_drawdown_pct": 4.382436609104857,
+    "max_drawdown_pct": 4.423397832480063,
     "trade_returns_pct": [
         0.066,
         -0.091,
