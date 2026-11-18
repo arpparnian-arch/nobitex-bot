@@ -1,21 +1,34 @@
 {
-    "balance": 95.42422290605856,
+    "balance": 70.42422290605856,
     "total_trades": 28,
     "win_trades": 5,
-    "positions": {},
-    "cooldowns": {
-        "ZORAUSDT": 1795032454
+    "positions": {
+        "XRPUSDT": {
+            "buy_price": 0.969,
+            "invested": 25.0,
+            "stop_loss": 0.9611744856209901,
+            "take_profit": 1.0016915999999998,
+            "breakeven_trigger_price": 0.9740865843463564,
+            "sl_distance_pct": 0.8075866232208372,
+            "risk_usdt": 0.32,
+            "highest_price": 0.96912,
+            "breakeven_active": false,
+            "score": 81.0,
+            "expectancy_r": 0.34021696080484487,
+            "buy_time": 1795034211
+        }
     },
+    "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
-    "day_key": "2026-11-18",
-    "day_start_equity": 96.14016426102987,
+    "day_key": "2026-11-19",
+    "day_start_equity": 95.42422290605856,
     "week_key": "2026-W46",
     "week_start_equity": 96.96612354671402,
     "gross_profit": 0.10924733223220671,
     "gross_loss": 2.942489921387273,
     "total_fees_paid": 2.210093870670168,
-    "max_drawdown_pct": 4.57577709394144,
+    "max_drawdown_pct": 4.58171104646982,
     "trade_returns_pct": [
         0.066,
         -0.091,
