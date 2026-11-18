@@ -11,7 +11,7 @@
             "breakeven_trigger_price": 0.9740865843463564,
             "sl_distance_pct": 0.8075866232208372,
             "risk_usdt": 0.32,
-            "highest_price": 0.96912,
+            "highest_price": 0.97285,
             "breakeven_active": false,
             "score": 81.0,
             "expectancy_r": 0.34021696080484487,
@@ -28,7 +28,7 @@
     "gross_profit": 0.10924733223220671,
     "gross_loss": 2.942489921387273,
     "total_fees_paid": 2.210093870670168,
-    "max_drawdown_pct": 4.58171104646982,
+    "max_drawdown_pct": 4.610090819431633,
     "trade_returns_pct": [
         0.066,
         -0.091,
