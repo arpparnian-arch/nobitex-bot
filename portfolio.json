@@ -3,9 +3,7 @@
     "total_trades": 33,
     "win_trades": 5,
     "positions": {},
-    "cooldowns": {
-        "STRKUSDT": 1795113819
-    },
+    "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
     "day_key": "2026-11-19",
