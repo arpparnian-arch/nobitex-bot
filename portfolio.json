@@ -3,9 +3,7 @@
     "total_trades": 32,
     "win_trades": 5,
     "positions": {},
-    "cooldowns": {
-        "ZORAUSDT": 1795082120
-    },
+    "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
     "day_key": "2026-11-19",
