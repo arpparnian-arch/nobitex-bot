@@ -11,7 +11,7 @@
             "breakeven_trigger_price": 0.0010457433,
             "sl_distance_pct": 2.2,
             "risk_usdt": 0.51,
-            "highest_price": 0.001033,
+            "highest_price": 0.001039,
             "breakeven_active": false,
             "score": 76.0,
             "expectancy_r": 0.9914088377100149,
@@ -19,7 +19,6 @@
         }
     },
     "cooldowns": {
-        "XRPUSDT": 1795053074,
         "MMTUSDT": 1795062182
     },
     "total_net_profit": -1.4997453623787609,
@@ -31,7 +30,7 @@
     "gross_profit": 0.10924733223220671,
     "gross_loss": 4.173194706431307,
     "total_fees_paid": 2.601835627579286,
-    "max_drawdown_pct": 6.033319900323988,
+    "max_drawdown_pct": 6.190361607404498,
     "trade_returns_pct": [
         0.066,
         -0.091,
