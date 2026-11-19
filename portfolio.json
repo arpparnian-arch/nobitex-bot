@@ -1,8 +1,23 @@
 {
-    "balance": 93.59718310447545,
+    "balance": 68.59718310447545,
     "total_trades": 31,
     "win_trades": 5,
-    "positions": {},
+    "positions": {
+        "ZORAUSDT": {
+            "buy_price": 0.00463,
+            "invested": 25.0,
+            "stop_loss": 0.00459,
+            "take_profit": 0.0048289,
+            "breakeven_trigger_price": 0.0046559999999999995,
+            "sl_distance_pct": 0.8639308855291412,
+            "risk_usdt": 0.36,
+            "highest_price": 0.00463,
+            "breakeven_active": false,
+            "score": 85.0,
+            "expectancy_r": 0.4925533609712215,
+            "buy_time": 1795068171
+        }
+    },
     "cooldowns": {
         "ZILUSDT": 1795070470
     },
@@ -15,7 +30,7 @@
     "gross_profit": 0.10924733223220671,
     "gross_loss": 4.769529722970389,
     "total_fees_paid": 2.709596444312354,
-    "max_drawdown_pct": 6.402816895524552,
+    "max_drawdown_pct": 6.564803936561275,
     "trade_returns_pct": [
         0.066,
         -0.091,
