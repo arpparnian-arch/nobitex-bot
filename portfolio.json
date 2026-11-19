@@ -1,8 +1,23 @@
 {
-    "balance": 93.56414326379173,
+    "balance": 70.88414326379174,
     "total_trades": 32,
     "win_trades": 5,
-    "positions": {},
+    "positions": {
+        "STRKUSDT": {
+            "buy_price": 0.0329,
+            "invested": 22.68,
+            "stop_loss": 0.03223,
+            "take_profit": 0.03534485,
+            "breakeven_trigger_price": 0.0333355,
+            "sl_distance_pct": 2.0364741641337294,
+            "risk_usdt": 0.58,
+            "highest_price": 0.0329,
+            "breakeven_active": false,
+            "score": 80.0,
+            "expectancy_r": 0.4778893761599712,
+            "buy_time": 1795092821
+        }
+    },
     "cooldowns": {},
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
@@ -13,7 +28,7 @@
     "gross_profit": 0.10924733223220671,
     "gross_loss": 4.8025695636540995,
     "total_fees_paid": 2.9046233260327843,
-    "max_drawdown_pct": 6.564803936561275,
+    "max_drawdown_pct": 6.587516310676335,
     "trade_returns_pct": [
         0.066,
         -0.091,
