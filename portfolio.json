@@ -1,8 +1,37 @@
 {
-    "balance": 94.9994007874609,
+    "balance": 56.92940078746091,
     "total_trades": 29,
     "win_trades": 5,
-    "positions": {},
+    "positions": {
+        "ZILUSDT": {
+            "buy_price": 0.001031,
+            "invested": 17.99,
+            "stop_loss": 0.001008318,
+            "take_profit": 0.00117509,
+            "breakeven_trigger_price": 0.0010457433,
+            "sl_distance_pct": 2.2,
+            "risk_usdt": 0.51,
+            "highest_price": 0.001031,
+            "breakeven_active": false,
+            "score": 76.0,
+            "expectancy_r": 0.9914088377100149,
+            "buy_time": 1795046995
+        },
+        "MMTUSDT": {
+            "buy_price": 0.2238,
+            "invested": 20.08,
+            "stop_loss": 0.2188764,
+            "take_profit": 0.25912050000000003,
+            "breakeven_trigger_price": 0.22700034,
+            "sl_distance_pct": 2.2,
+            "risk_usdt": 0.55,
+            "highest_price": 0.2238,
+            "breakeven_active": false,
+            "score": 78.0,
+            "expectancy_r": 1.305391411144245,
+            "buy_time": 1795047899
+        }
+    },
     "cooldowns": {
         "XRPUSDT": 1795053074
     },
