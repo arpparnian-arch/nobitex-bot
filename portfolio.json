@@ -1,25 +1,10 @@
 {
-    "balance": 76.20351812101453,
-    "total_trades": 30,
+    "balance": 93.59718310447545,
+    "total_trades": 31,
     "win_trades": 5,
-    "positions": {
-        "ZILUSDT": {
-            "buy_price": 0.001031,
-            "invested": 17.99,
-            "stop_loss": 0.001008318,
-            "take_profit": 0.00117509,
-            "breakeven_trigger_price": 0.0010457433,
-            "sl_distance_pct": 2.2,
-            "risk_usdt": 0.51,
-            "highest_price": 0.001039,
-            "breakeven_active": false,
-            "score": 76.0,
-            "expectancy_r": 0.9914088377100149,
-            "buy_time": 1795046995
-        }
-    },
+    "positions": {},
     "cooldowns": {
-        "MMTUSDT": 1795062182
+        "ZILUSDT": 1795070470
     },
     "total_net_profit": -1.4997453623787609,
     "peak_equity": 100.0,
@@ -28,9 +13,9 @@
     "week_key": "2026-W46",
     "week_start_equity": 96.96612354671402,
     "gross_profit": 0.10924733223220671,
-    "gross_loss": 4.173194706431307,
-    "total_fees_paid": 2.601835627579286,
-    "max_drawdown_pct": 6.190361607404498,
+    "gross_loss": 4.769529722970389,
+    "total_fees_paid": 2.709596444312354,
+    "max_drawdown_pct": 6.402816895524552,
     "trade_returns_pct": [
         0.066,
         -0.091,
@@ -48,7 +33,8 @@
         0.117,
         -0.871,
         -1.699,
-        -4.013
+        -4.013,
+        -3.315
     ],
     "trade_r_multiples": [
         0.086,
@@ -67,7 +53,8 @@
         0.118,
         -0.396,
         -2.104,
-        -1.824
+        -1.824,
+        -1.507
     ],
     "system_halted": false,
     "halt_reason": ""
